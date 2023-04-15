@@ -1,5 +1,8 @@
 package tictactoe.shared;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 import tictactoe.server.TileState;
 
 public class Board {
@@ -73,5 +76,10 @@ public class Board {
         board[i][j] = TileState.EMPTY;
       }
     }
+  }
+
+  public Stream<TileState> stream() {
+    return Arrays.stream(board)
+        .flatMap(row -> Arrays.stream(row));
   }
 }

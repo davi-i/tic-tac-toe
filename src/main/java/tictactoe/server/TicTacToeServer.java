@@ -1,6 +1,5 @@
 package tictactoe.server;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 import tictactoe.shared.RoomFullException;
@@ -47,10 +46,9 @@ public class TicTacToeServer implements TicTacToeInterface {
         }
         board.setTile(pos, id.getTile());
         if (checkVictory(pos)) {
-            changeState(id.getVictoryState());
             Player player = getPlayer(id);
             player.addScore();
-            changeScore(player.getName(), player.getScore());
+            changeState(id.getVictoryState());
         } else if (checkTie()) {
             changeState(GameState.TIE);
         } else {
@@ -83,31 +81,28 @@ public class TicTacToeServer implements TicTacToeInterface {
 
     @Override
     public void exitGame(PlayerId id) {
-        changeState(GameState.START);
         board.clean();
-
         playerOne.get().setScore(0);
         playerTwo.get().setScore(0);
-        changeScore(playerOne.get().getName(), playerOne.get().getScore());
-        changeScore(playerTwo.get().getName(), playerTwo.get().getScore());
+
+        changeState(GameState.START);
     }
 
     private void changeState(GameState newState) {
         state = newState;
         if (playerOne.isPresent()) {
-            playerOne.get().changeState(state);
+            playerOne.get().changeState(
+                    state,
+                    board,
+                    playerOne.get().getScore(),
+                    playerTwo.get().getScore());
         }
         if (playerTwo.isPresent()) {
-            playerTwo.get().changeState(state);
-        }
-    }
-
-    private void changeScore(String name, int score) {
-        if (playerOne.isPresent()) {
-            playerOne.get().changeScore(name, score);
-        }
-        if (playerTwo.isPresent()) {
-            playerTwo.get().changeScore(name, score);
+            playerTwo.get().changeState(
+                    state,
+                    board,
+                    playerOne.get().getScore(),
+                    playerTwo.get().getScore());
         }
     }
 
@@ -166,8 +161,7 @@ public class TicTacToeServer implements TicTacToeInterface {
     }
 
     private boolean checkTie() {
-        return !Arrays.stream(this.board.board)
-                .flatMap(row -> Arrays.stream(row))
+        return !board.stream()
                 .anyMatch(TileState.EMPTY::equals);
 
     }
