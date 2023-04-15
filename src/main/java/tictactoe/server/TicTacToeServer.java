@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import tictactoe.shared.RoomFullException;
+import tictactoe.shared.MoveResult;
 import tictactoe.shared.PlayerInterface;
 import tictactoe.shared.TicTacToeInterface;
 
@@ -38,31 +39,29 @@ public class TicTacToeServer implements TicTacToeInterface {
     }
 
     @Override
-    public void makeMove(PlayerId id, int pos) {
+    public MoveResult makeMove(PlayerId id, int pos) {
         if (state != id.getTurn()) {
-            // TODO: send message to other player
-            return;
+            return MoveResult.NOT_YOUR_TURN;
         }
         if (board.getTile(pos) != TileState.EMPTY) {
-            // TODO: send message to current player
-            return;
+            return MoveResult.MOVE_NOT_ALLOWED;
         }
         board.setTile(pos, id.getTile());
         if (checkVictory(pos)) {
-            state = id.getVictoryState();
+            changeState(id.getVictoryState());
         } else if (checkTie()) {
-            state = GameState.TIE;
+            changeState(GameState.TIE);
         } else {
-            state = id.getNextTurn();
+            changeState(id.getNextTurn());
         }
-        // TODO: notify players of state change
+        return MoveResult.MOVE_ALLOWED;
     }
 
     public void update() {
         switch (state) {
             case START:
                 if (playerOne.isPresent() && playerTwo.isPresent()) {
-                    state = GameState.CROSS_TURN;
+                    changeState(GameState.CROSS_TURN);
                 }
                 break;
             case CROSS_TURN:
@@ -72,7 +71,7 @@ public class TicTacToeServer implements TicTacToeInterface {
             case CROSS_WIN:
             case NOUGHT_WIN:
             case TIE:
-                state = GameState.RESTART;
+                changeState(GameState.RESTART);
                 break;
             case RESTART:
                 // TODO: ask clients what to do
@@ -82,6 +81,16 @@ public class TicTacToeServer implements TicTacToeInterface {
                 break;
             default:
                 break;
+        }
+    }
+
+    private void changeState(GameState newState) {
+        state = newState;
+        if (playerOne.isPresent()) {
+            playerOne.get().changeState(state);
+        }
+        if (playerTwo.isPresent()) {
+            playerTwo.get().changeState(state);
         }
     }
 

@@ -5,5 +5,5 @@ import tictactoe.server.PlayerId;
 public interface TicTacToeInterface {
   public PlayerId enterGame(PlayerInterface player) throws RoomFullException;
 
-  public void makeMove(PlayerId id, int pos);
+  public MoveResult makeMove(PlayerId id, int pos);
 }
