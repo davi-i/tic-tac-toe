@@ -1,4 +1,6 @@
-package tictactoe.server;
+package tictactoe.shared;
+
+import tictactoe.server.TileState;
 
 public class Board {
   private static final int TILE_NUMBER = 3;
@@ -8,6 +10,7 @@ public class Board {
   public Board() {
     clean();
   }
+
   public void setTile(int index, TileState value) {
     int i = index / TILE_NUMBER;
     int j = index % TILE_NUMBER;

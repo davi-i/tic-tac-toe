@@ -3,6 +3,8 @@ package tictactoe.server;
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 
+import tictactoe.shared.Board;
+
 /**
  * Hello world!
  *

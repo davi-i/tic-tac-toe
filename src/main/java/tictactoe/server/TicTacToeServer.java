@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import tictactoe.shared.RoomFullException;
+import tictactoe.shared.Board;
 import tictactoe.shared.MoveResult;
 import tictactoe.shared.PlayerInterface;
 import tictactoe.shared.TicTacToeInterface;
@@ -73,18 +74,18 @@ public class TicTacToeServer implements TicTacToeInterface {
             case NOUGHT_WIN:
             case TIE:
                 changeState(GameState.START);
-                //TODO:: Notificar jogadores que a rodada acabou.
+                // TODO:: Notificar jogadores que a rodada acabou.
                 break;
             default:
                 break;
         }
     }
-    
+
     @Override
     public void exitGame(PlayerId id) {
         changeState(GameState.START);
         board.clean();
-        
+
         playerOne.get().setScore(0);
         playerTwo.get().setScore(0);
         changeScore(playerOne.get().getName(), playerOne.get().getScore());
