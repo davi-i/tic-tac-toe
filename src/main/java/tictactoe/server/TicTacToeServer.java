@@ -128,7 +128,7 @@ public class TicTacToeServer implements TicTacToeInterface {
     }
 
     private boolean checkTie() {
-        return Arrays.stream(this.board.board)
+        return !Arrays.stream(this.board.board)
                 .flatMap(row -> Arrays.stream(row))
                 .anyMatch(TileState.EMPTY::equals);
 

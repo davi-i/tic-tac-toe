@@ -12,9 +12,12 @@ public class TicTacToe {
         try {
             TestServer server = new TestServer();
             LocateRegistry.createRegistry(1099);
-            Naming.rebind("rmi://localhost/TicTacToe", server);
+            Naming.rebind("rmi://10.9.99.230/TicTacToe", server);
 
             System.out.println("Waiting for players...");
+
+            Board board = new Board();
+            System.out.println(board);
         } catch (Exception e) {
             e.printStackTrace();
         }

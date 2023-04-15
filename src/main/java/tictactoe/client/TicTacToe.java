@@ -3,6 +3,8 @@ package tictactoe.client;
 import java.rmi.Naming;
 import java.util.Scanner;
 
+import tictactoe.shared.TestServerInterface;
+
 /**
  * Hello world!
  *
