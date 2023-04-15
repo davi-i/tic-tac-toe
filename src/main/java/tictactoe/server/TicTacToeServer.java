@@ -11,13 +11,11 @@ import tictactoe.shared.TicTacToeInterface;
 public class TicTacToeServer implements TicTacToeInterface {
     private GameState state;
     private Board board;
-    private boolean finished;
     private Optional<Player> playerOne;
     private Optional<Player> playerTwo;
 
     public TicTacToeServer() {
         state = GameState.START;
-        finished = false;
         board = new Board();
         playerOne = Optional.empty();
         playerTwo = Optional.empty();
@@ -71,17 +69,19 @@ public class TicTacToeServer implements TicTacToeInterface {
             case CROSS_WIN:
             case NOUGHT_WIN:
             case TIE:
-                changeState(GameState.RESTART);
-                break;
-            case RESTART:
-                // TODO: ask clients what to do
-                break;
-            case EXIT:
-                finished = true;
+                changeState(GameState.START);
+                //TODO:: Notificar jogadores que a rodada acabou.
                 break;
             default:
                 break;
         }
+    }
+    
+    @Override
+    public void exitGame(PlayerId id) {
+        changeState(GameState.START);
+        board.clean();
+        //TODO:: zerar futuro scores;
     }
 
     private void changeState(GameState newState) {
@@ -151,17 +151,11 @@ public class TicTacToeServer implements TicTacToeInterface {
             case CROSS_WIN:
                 System.out.println("Cross won!!");
                 break;
-            case EXIT:
-                System.out.println("Now exiting!");
-                break;
             case NOUGHT_TURN:
                 System.out.println("It's nought turn");
                 break;
             case NOUGHT_WIN:
                 System.out.println("Nought won!!");
-                break;
-            case RESTART:
-                System.out.println("Do you want to restart the game? [Y/n]");
                 break;
             case START:
                 System.out.println("Starting game");
@@ -172,10 +166,6 @@ public class TicTacToeServer implements TicTacToeInterface {
             default:
                 break;
         }
-    }
-
-    public boolean hasFinished() {
-        return finished;
     }
 
 }

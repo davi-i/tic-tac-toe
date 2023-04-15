@@ -6,13 +6,8 @@ public class Board {
   protected TileState[][] board = new TileState[TILE_NUMBER][TILE_NUMBER];
 
   public Board() {
-    for (int i = 0; i < TILE_NUMBER; i++) {
-      for (int j = 0; j < TILE_NUMBER; j++) {
-        board[i][j] = TileState.EMPTY;
-      }
-    }
+    clean();
   }
-
   public void setTile(int index, TileState value) {
     int i = index / TILE_NUMBER;
     int j = index % TILE_NUMBER;
@@ -67,5 +62,13 @@ public class Board {
     }
 
     return result;
+  }
+
+  public void clean() {
+    for (int i = 0; i < TILE_NUMBER; i++) {
+      for (int j = 0; j < TILE_NUMBER; j++) {
+        board[i][j] = TileState.EMPTY;
+      }
+    }
   }
 }

@@ -6,4 +6,6 @@ public interface TicTacToeInterface {
   public PlayerId enterGame(PlayerInterface player) throws RoomFullException;
 
   public MoveResult makeMove(PlayerId id, int pos);
+
+  public void exitGame(PlayerId id);
 }

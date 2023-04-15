@@ -7,6 +7,4 @@ public enum GameState {
     TIE,
     CROSS_WIN,
     NOUGHT_WIN,
-    RESTART,
-    EXIT,
 }
