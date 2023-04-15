@@ -5,10 +5,14 @@ import tictactoe.shared.PlayerInterface;
 public class Player implements PlayerInterface {
   private PlayerId id;
   private PlayerInterface player;
+  private String name;
+  private int score;
 
-  public Player(PlayerId id, PlayerInterface player) {
+  public Player(PlayerId id, PlayerInterface player, String name) {
     this.id = id;
     this.player = player;
+    this.name = name;
+    this.score = 0;
   }
 
   @Override
@@ -16,4 +20,24 @@ public class Player implements PlayerInterface {
     player.changeState(state);
   }
 
+  @Override
+  public void changeScore(String name, int score) {
+    player.changeScore(name, score);
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public int getScore() {
+    return score;
+  }
+
+  public void setScore(int score) {
+    this.score = score;
+  }
+
+  public void addScore() {
+    score++;
+  }
 }

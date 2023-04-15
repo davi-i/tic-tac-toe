@@ -22,14 +22,14 @@ public class TicTacToeServer implements TicTacToeInterface {
     }
 
     @Override
-    public PlayerId enterGame(PlayerInterface player) throws RoomFullException {
+    public PlayerId enterGame(PlayerInterface player, String name) throws RoomFullException {
         if (playerOne.isEmpty()) {
             PlayerId id = new PlayerId(PlayerSymbol.CROSSES);
-            playerOne = Optional.of(new Player(id, player));
+            playerOne = Optional.of(new Player(id, player, name));
             return id;
         } else if (playerTwo.isEmpty()) {
             PlayerId id = new PlayerId(PlayerSymbol.NOUGHTS);
-            playerTwo = Optional.of(new Player(id, player));
+            playerTwo = Optional.of(new Player(id, player, name));
             return id;
         } else {
             throw new RoomFullException();
@@ -47,6 +47,9 @@ public class TicTacToeServer implements TicTacToeInterface {
         board.setTile(pos, id.getTile());
         if (checkVictory(pos)) {
             changeState(id.getVictoryState());
+            Player player = getPlayer(id);
+            player.addScore();
+            changeScore(player.getName(), player.getScore());
         } else if (checkTie()) {
             changeState(GameState.TIE);
         } else {
@@ -91,6 +94,27 @@ public class TicTacToeServer implements TicTacToeInterface {
         }
         if (playerTwo.isPresent()) {
             playerTwo.get().changeState(state);
+        }
+    }
+
+    private void changeScore(String name, int score) {
+        if (playerOne.isPresent()) {
+            playerOne.get().changeScore(name, score);
+        }
+        if (playerTwo.isPresent()) {
+            playerTwo.get().changeScore(name, score);
+        }
+    }
+
+    private Player getPlayer(PlayerId id) {
+        switch (id.getSymbol()) {
+            case CROSSES:
+                return playerOne.get();
+            case NOUGHTS:
+                return playerTwo.get();
+            default:
+                throw new RuntimeException();
+
         }
     }
 
