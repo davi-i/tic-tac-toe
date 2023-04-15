@@ -84,7 +84,11 @@ public class TicTacToeServer implements TicTacToeInterface {
     public void exitGame(PlayerId id) {
         changeState(GameState.START);
         board.clean();
-        //TODO:: zerar futuro scores;
+        
+        playerOne.get().setScore(0);
+        playerTwo.get().setScore(0);
+        changeScore(playerOne.get().getName(), playerOne.get().getScore());
+        changeScore(playerTwo.get().getName(), playerTwo.get().getScore());
     }
 
     private void changeState(GameState newState) {
