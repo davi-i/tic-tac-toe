@@ -3,28 +3,24 @@ package tictactoe.client;
 import java.rmi.Naming;
 import java.util.Scanner;
 
+import tictactoe.shared.Board;
 import tictactoe.shared.TestServerInterface;
+import tictactoe.shared.TicTacToeInterface;
 
 /**
  * Hello world!
  *
  */
 public class TicTacToe {
+
+    private Board board;
+
     public static void main(String[] args) {
         try {
-            TestServerInterface server = (TestServerInterface) Naming.lookup("rmi://localhost:1099/TicTacToe");
-            while (true) {
-                server.iKnowYou();
-                Scanner scanner = new Scanner(System.in);
+            TicTacToeInterface server = (TicTacToeInterface) Naming.lookup("rmi://"+ args[1]+":"+args[2]+"/TicTacToe");
+            
+            
 
-                System.out.println("Press Enter to continue...");
-                scanner.nextLine(); // wait for user to press Enter
-
-                System.out.println("Program continued.");
-                // add code here to continue the program
-
-                scanner.close();
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
