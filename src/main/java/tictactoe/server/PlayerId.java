@@ -1,5 +1,7 @@
 package tictactoe.server;
 
+import tictactoe.shared.GameState;
+
 public class PlayerId {
   private PlayerSymbol symbol;
 

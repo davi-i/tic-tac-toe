@@ -1,6 +1,7 @@
 package tictactoe.server;
 
 import tictactoe.shared.Board;
+import tictactoe.shared.GameState;
 import tictactoe.shared.PlayerInterface;
 
 public class Player implements PlayerInterface {
@@ -19,6 +20,11 @@ public class Player implements PlayerInterface {
   @Override
   public void changeState(GameState state, Board board, int player1Score, int player2Score) {
     player.changeState(state, board, player1Score, player2Score);
+  }
+
+  @Override
+  public void setOpponetName(String name) {
+    player.setOpponetName(name);
   }
 
   public String getName() {
