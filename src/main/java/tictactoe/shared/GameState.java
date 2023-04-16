@@ -1,4 +1,4 @@
-package tictactoe.server;
+package tictactoe.shared;
 
 public enum GameState {
     START,

@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import tictactoe.shared.RoomFullException;
 import tictactoe.shared.Board;
+import tictactoe.shared.GameState;
 import tictactoe.shared.MoveResult;
 import tictactoe.shared.PlayerInterface;
 import tictactoe.shared.TicTacToeInterface;
@@ -61,6 +62,8 @@ public class TicTacToeServer implements TicTacToeInterface {
         switch (state) {
             case START:
                 if (playerOne.isPresent() && playerTwo.isPresent()) {
+                    playerOne.get().setOpponetName(playerTwo.get().getName());
+                    playerTwo.get().setOpponetName(playerOne.get().getName());
                     changeState(GameState.CROSS_TURN);
                 }
                 break;
@@ -161,34 +164,7 @@ public class TicTacToeServer implements TicTacToeInterface {
     }
 
     private boolean checkTie() {
-        return !board.stream()
-                .anyMatch(TileState.EMPTY::equals);
+        return !board.stream().anyMatch(TileState.EMPTY::equals);
 
     }
-
-    public void render() {
-        switch (state) {
-            case CROSS_TURN:
-                System.out.println("It's cross turn");
-                break;
-            case CROSS_WIN:
-                System.out.println("Cross won!!");
-                break;
-            case NOUGHT_TURN:
-                System.out.println("It's nought turn");
-                break;
-            case NOUGHT_WIN:
-                System.out.println("Nought won!!");
-                break;
-            case START:
-                System.out.println("Starting game");
-                break;
-            case TIE:
-                System.out.println("It's a tie! Well played.");
-                break;
-            default:
-                break;
-        }
-    }
-
 }
