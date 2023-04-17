@@ -1,8 +1,11 @@
 package tictactoe.shared;
 
-public interface PlayerInterface {
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
-  public void changeState(GameState state, Board board, int player1Score, int player2Score);
+public interface PlayerInterface extends Remote {
 
-  public void setOpponetName(String name);
+  public void changeState(GameState state, Board board, int player1Score, int player2Score) throws RemoteException;
+
+  public void setOpponetName(String name) throws RemoteException;
 }

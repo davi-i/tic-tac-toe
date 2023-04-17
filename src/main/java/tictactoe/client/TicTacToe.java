@@ -12,14 +12,12 @@ import tictactoe.shared.TicTacToeInterface;
  *
  */
 public class TicTacToe {
-
-    private Board board;
-
     public static void main(String[] args) {
         try {
-            TicTacToeInterface server = (TicTacToeInterface) Naming.lookup("rmi://"+ args[1]+":"+args[2]+"/TicTacToe");
-            
-            
+            TicTacToeInterface server = (TicTacToeInterface) Naming
+                    .lookup("rmi://" + args[1] + ":" + args[2] + "/TicTacToe");
+            // TODO: enter name with scanner
+            Player player = new Player(server, args[3]);
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,13 +1,17 @@
 package tictactoe.client;
 
 import tictactoe.shared.GameState;
+
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
 import tictactoe.server.PlayerId;
 import tictactoe.shared.Board;
 import tictactoe.shared.PlayerInterface;
 import tictactoe.shared.RoomFullException;
 import tictactoe.shared.TicTacToeInterface;
 
-public class Player implements PlayerInterface {
+public class Player extends UnicastRemoteObject implements PlayerInterface {
 
     private TicTacToeInterface server;
     private Board board;
@@ -18,14 +22,15 @@ public class Player implements PlayerInterface {
     private String opponentName;
     private PlayerId id;
 
-    public Player(TicTacToeInterface server, String name) throws RoomFullException {
+    public Player(TicTacToeInterface server, String name) throws RoomFullException, RemoteException {
+        super();
         this.server = server;
         this.myName = name;
         this.id = server.enterGame(this, name);
     }
 
     @Override
-    public void changeState(GameState state, Board board, int player1Score, int player2Score) {
+    public void changeState(GameState state, Board board, int player1Score, int player2Score) throws RemoteException {
         this.board = board;
         this.state = state;
         this.player1Score = player1Score;
@@ -41,7 +46,7 @@ public class Player implements PlayerInterface {
     }
 
     @Override
-    public void setOpponetName(String name) {
+    public void setOpponetName(String name) throws RemoteException {
         this.opponentName = name;
     }
 
