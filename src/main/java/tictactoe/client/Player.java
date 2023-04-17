@@ -1,8 +1,10 @@
 package tictactoe.client;
 
-import tictactoe.server.GameState;
+import tictactoe.shared.GameState;
+import tictactoe.server.PlayerId;
 import tictactoe.shared.Board;
 import tictactoe.shared.PlayerInterface;
+import tictactoe.shared.RoomFullException;
 import tictactoe.shared.TicTacToeInterface;
 
 public class Player implements PlayerInterface {
@@ -12,7 +14,15 @@ public class Player implements PlayerInterface {
     private GameState state;
     private int player1Score;
     private int player2Score;
-    //TODO; NOMES DOS JOGADORES
+    private String myName;
+    private String opponentName;
+    private PlayerId id;
+
+    public Player(TicTacToeInterface server, String name) throws RoomFullException {
+        this.server = server;
+        this.myName = name;
+        this.id = server.enterGame(this, name);
+    }
 
     @Override
     public void changeState(GameState state, Board board, int player1Score, int player2Score) {
@@ -20,20 +30,19 @@ public class Player implements PlayerInterface {
         this.state = state;
         this.player1Score = player1Score;
         this.player2Score = player2Score;
-        
+
     }
 
     public void printGame() {
-        System.out.println("| SCORE: P1 "+ player1Score +" | p2: "+ player2Score + " |");
+        System.out.println("| SCORE | " + myName + ": " + player1Score
+                + " | " + opponentName + ": " + player2Score + " |");
         System.out.println(board);
         System.out.println("[Digite sua jogada] OU ['q' para encerrar o jogo]");
     }
 
+    @Override
+    public void setOpponetName(String name) {
+        this.opponentName = name;
+    }
 
-
-
-
-
-
-    
 }
