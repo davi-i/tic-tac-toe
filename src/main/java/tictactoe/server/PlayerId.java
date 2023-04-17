@@ -45,15 +45,4 @@ public class PlayerId {
         throw new RuntimeException();
     }
   }
-
-  protected GameState getVictoryState() {
-    switch (symbol) {
-      case CROSSES:
-        return GameState.CROSS_WIN;
-      case NOUGHTS:
-        return GameState.NOUGHT_WIN;
-      default:
-        throw new RuntimeException();
-    }
-  }
 }
