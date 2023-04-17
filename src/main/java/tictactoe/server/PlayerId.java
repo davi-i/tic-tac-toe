@@ -1,13 +1,16 @@
 package tictactoe.server;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 import tictactoe.shared.GameState;
 
-public class PlayerId implements Serializable {
+public class PlayerId extends UnicastRemoteObject {
   private PlayerSymbol symbol;
 
-  protected PlayerId(PlayerSymbol symbol) {
+  protected PlayerId(PlayerSymbol symbol) throws RemoteException {
+    super();
     this.symbol = symbol;
   }
 

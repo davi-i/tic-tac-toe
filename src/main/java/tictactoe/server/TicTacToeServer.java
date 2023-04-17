@@ -27,6 +27,7 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
 
     @Override
     public PlayerId enterGame(PlayerInterface player, String name) throws RoomFullException, RemoteException {
+        System.out.println("player " + name + " is trying to enter game");
         PlayerId id;
         if (playerOne.isEmpty()) {
             id = new PlayerId(PlayerSymbol.CROSSES);
@@ -36,7 +37,7 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
             playerTwo = Optional.of(new Player(id, player, name));
 
             // Starts the game
-            changeState(GameState.CROSS_TURN);
+            // changeState(GameState.CROSS_TURN);
         } else {
             throw new RoomFullException();
         }
