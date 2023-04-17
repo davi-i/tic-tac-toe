@@ -1,8 +1,10 @@
 package tictactoe.server;
 
+import java.io.Serializable;
+
 import tictactoe.shared.GameState;
 
-public class PlayerId {
+public class PlayerId implements Serializable {
   private PlayerSymbol symbol;
 
   protected PlayerId(PlayerSymbol symbol) {
