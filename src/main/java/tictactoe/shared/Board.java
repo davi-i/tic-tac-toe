@@ -5,7 +5,7 @@ import java.util.stream.Stream;
 
 import tictactoe.server.TileState;
 
-public class Board {
+public class Board implements BoardInterface {
   private static final int TILE_NUMBER = 3;
 
   protected TileState[][] board = new TileState[TILE_NUMBER][TILE_NUMBER];

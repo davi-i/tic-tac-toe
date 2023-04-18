@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 import tictactoe.shared.Board;
+import tictactoe.shared.BoardInterface;
 import tictactoe.shared.GameState;
 import tictactoe.shared.PlayerInterface;
 
@@ -53,7 +54,7 @@ public class Player extends UnicastRemoteObject implements PlayerInterface {
   }
 
   @Override
-  public int getMove(Board board) throws RemoteException {
+  public int getMove(BoardInterface board) throws RemoteException {
     return player.getMove(board);
   }
 }

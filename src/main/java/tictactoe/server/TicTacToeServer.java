@@ -59,6 +59,7 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
     }
 
     private void processGame() throws RemoteException {
+        state = GameState.PROCESS;
         while (state == GameState.PROCESS) {
             MoveResult move;
             do {
@@ -74,7 +75,9 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
     }
 
     public MoveResult getMove(Player player) throws RemoteException {
+        System.out.println("going to get move");
         int pos = player.getMove(board);
+        System.out.println("got move");
         TileState tile;
         try {
             tile = board.getTile(pos);
