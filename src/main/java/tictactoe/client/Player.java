@@ -5,6 +5,7 @@ import tictactoe.shared.PlayerIdInterface;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Scanner;
 
 import tictactoe.server.PlayerId;
 import tictactoe.shared.Board;
@@ -13,6 +14,7 @@ import tictactoe.shared.RoomFullException;
 import tictactoe.shared.TicTacToeInterface;
 
 public class Player extends UnicastRemoteObject implements PlayerInterface {
+
 
     private TicTacToeInterface server;
     private Board board;
@@ -50,5 +52,27 @@ public class Player extends UnicastRemoteObject implements PlayerInterface {
     public void setOpponetName(String name) throws RemoteException {
         this.opponentName = name;
     }
+
+    @Override
+    public int getMove(Board board) throws RemoteException {
+        
+        System.out.println("| SCORE | " + myName + ": " + player1Score
+        + " | " + opponentName + ": " + player2Score + " |");
+        System.out.println(board);
+        System.out.println("[Digite sua jogada] OU ['q' para encerrar o jogo]:");
+
+        Scanner scanner = new Scanner(System.in);
+        char input = scanner.next().charAt(0);
+
+        // TODO: find a better way to do this
+        if (input == 'q') {
+            server.exitGame(id);
+            return -1;
+        }
+        
+        return Character.getNumericValue(input);  
+         
+    }
+
 
 }

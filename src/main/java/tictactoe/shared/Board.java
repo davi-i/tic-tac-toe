@@ -2,19 +2,13 @@ package tictactoe.shared;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 
 import tictactoe.server.TileState;
 
-public class Board extends UnicastRemoteObject {
+public class Board {
   private static final int TILE_NUMBER = 3;
 
   protected TileState[][] board = new TileState[TILE_NUMBER][TILE_NUMBER];
-
-  public Board() throws RemoteException {
-    clean();
-  }
 
   public void setTile(int index, TileState value) {
     int i = index / TILE_NUMBER;
@@ -23,7 +17,10 @@ public class Board extends UnicastRemoteObject {
     board[i][j] = value;
   }
 
-  public TileState getTile(int index) {
+  public TileState getTile(int index) throws IndexOutOfBoundsException {
+    if (index < 0 || index >= TILE_NUMBER * TILE_NUMBER) {
+      throw new IndexOutOfBoundsException(index);
+    }
     int i = index / TILE_NUMBER;
     int j = index % TILE_NUMBER;
 

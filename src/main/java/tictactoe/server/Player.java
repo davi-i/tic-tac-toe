@@ -46,4 +46,13 @@ public class Player extends UnicastRemoteObject implements PlayerInterface {
   public void addScore() {
     score++;
   }
+
+  public PlayerId getId() {
+    return this.id; 
+  }
+
+  @Override
+  public int getMove(Board board) throws RemoteException {
+    return player.getMove(board);
+  }
 }

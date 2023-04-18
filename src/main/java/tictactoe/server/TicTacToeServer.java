@@ -38,7 +38,7 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
             playerTwo = Optional.of(new Player(id, player, name));
 
             // Starts the game
-            // changeState(GameState.CROSS_TURN);
+            changeState(GameState.PROCESS);
         } else {
             throw new RoomFullException();
         }
@@ -46,18 +46,49 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
         return id;
     }
 
+
     @Override
-    public MoveResult makeMove(PlayerId id, int pos) throws RemoteException {
-        if (state != id.getTurn()) {
-            return MoveResult.NOT_YOUR_TURN;
-        }
-        if (board.getTile(pos) != TileState.EMPTY) {
-            return MoveResult.MOVE_NOT_ALLOWED;
-        }
+    public void exitGame(PlayerIdInterface id) throws RemoteException {
+        board.clean();
+        playerOne.get().setScore(0);
+        playerTwo.get().setScore(0);
 
         Player player = getPlayer(id);
+        System.out.println("player " + player.getName() + " left the game. :(");
+
+        changeState(GameState.START);
+    }
+
+    private void processGame() throws RemoteException {
+        while (state == GameState.PROCESS) {
+            MoveResult move;
+            do {
+                move = getMove(playerOne.get());
+                // TODO: notify the player of wrong move
+            } while (move != MoveResult.MOVE_ALLOWED);
+
+            do {
+                move = getMove(playerTwo.get());
+                // TODO: notify the player of wrong move
+            } while (move != MoveResult.MOVE_ALLOWED);
+        }
+    }
+
+
+    public MoveResult getMove(Player player) throws RemoteException {
+        int pos = player.getMove(board);
+        TileState tile;
+        try {
+            tile = board.getTile(pos);
+        } catch (IndexOutOfBoundsException e) {
+            return MoveResult.INVALID_MOVE;
+        }
+        if (tile != TileState.EMPTY) {
+            return MoveResult.TILE_NOT_EMPTY;
+        }
+
         System.out.println("player " + player.getName() + " made move at position " + pos);
-        board.setTile(pos, id.getTile());
+        board.setTile(pos, player.getId().getTile());
         // TODO: NOTIFY PLAYERS WHO WON
         if (checkVictory(pos)) {
             System.out.println("player " + player.getName() + " won this round");
@@ -70,18 +101,6 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
             changeState(GameState.START);
         }
         return MoveResult.MOVE_ALLOWED;
-    }
-
-    @Override
-    public void exitGame(PlayerId id) throws RemoteException {
-        board.clean();
-        playerOne.get().setScore(0);
-        playerTwo.get().setScore(0);
-
-        Player player = getPlayer(id);
-        System.out.println("player " + player.getName() + " left the game. :(");
-
-        changeState(GameState.START);
     }
 
     private void changeState(GameState newState) throws RemoteException {
@@ -102,7 +121,7 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
         }
     }
 
-    private Player getPlayer(PlayerId id) {
+    private Player getPlayer(PlayerIdInterface id) {
         switch (id.getSymbol()) {
             case CROSSES:
                 return playerOne.get();
