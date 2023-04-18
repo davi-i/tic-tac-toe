@@ -2,6 +2,9 @@ package tictactoe.client;
 
 import tictactoe.shared.GameState;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Scanner;
@@ -14,6 +17,7 @@ import tictactoe.shared.TicTacToeInterface;
 
 public class Player extends UnicastRemoteObject implements PlayerInterface {
 
+    private static Scanner scanner = new Scanner(System.in);
     private TicTacToeInterface server;
     private Board board;
     private GameState state;
@@ -57,17 +61,17 @@ public class Player extends UnicastRemoteObject implements PlayerInterface {
 
         System.out.println("| SCORE | " + myName + ": " + player1Score
                 + " | " + opponentName + ": " + player2Score + " |");
-        // System.out.println(board);
+        System.out.println(board);
         System.out.println("[Digite sua jogada] OU ['q' para encerrar o jogo]:");
 
-        Scanner scanner = new Scanner(System.in);
-        String input = scanner.next();
-        scanner.close();
+        String input;
+        input = scanner.nextLine();
 
         // TODO: find a better way to do this
         if (input.equals("q")) {
             server.exitGame(id);
-            return -1;
+            scanner.close();
+            System.exit(0);
         }
 
         return Integer.parseInt(input);
