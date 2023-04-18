@@ -3,8 +3,6 @@ package tictactoe.server;
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 
-import tictactoe.shared.Board;
-
 /**
  * Hello world!
  *
@@ -12,9 +10,10 @@ import tictactoe.shared.Board;
 public class TicTacToe {
     public static void main(String[] args) {
         try {
+            System.setProperty("java.rmi.server.hostname", "10.9.99.230");
             TicTacToeServer server = new TicTacToeServer();
             LocateRegistry.createRegistry(1099);
-            Naming.rebind("rmi://0.0.0.0/TicTacToe", server);
+            Naming.rebind("rmi://10.9.99.230/TicTacToe", server);
 
             System.out.println("Waiting for players...");
         } catch (Exception e) {
