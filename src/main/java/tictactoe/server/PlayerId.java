@@ -20,7 +20,7 @@ public PlayerSymbol getSymbol() {
   }
 
 @Override
-public TileState getTile() {
+public TileState getTile() throws RemoteException {
     switch (symbol) {
       case CROSSES:
         return TileState.CROSS;
