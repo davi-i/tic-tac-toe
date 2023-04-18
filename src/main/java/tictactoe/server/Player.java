@@ -21,10 +21,11 @@ public class Player extends UnicastRemoteObject implements PlayerInterface {
     this.score = 0;
   }
 
-  @Override
-  public void changeState(GameState state, Board board, int player1Score, int player2Score) throws RemoteException {
-    player.changeState(state, board, player1Score, player2Score);
-  }
+  // @Override
+  // public void changeState(GameState state, Board board, int player1Score, int
+  // player2Score) throws RemoteException {
+  // player.changeState(state, board, player1Score, player2Score);
+  // }
 
   @Override
   public void setOpponetName(String name) throws RemoteException {
@@ -48,7 +49,7 @@ public class Player extends UnicastRemoteObject implements PlayerInterface {
   }
 
   public PlayerId getId() {
-    return this.id; 
+    return this.id;
   }
 
   @Override

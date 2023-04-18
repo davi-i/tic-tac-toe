@@ -38,14 +38,13 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
             playerTwo = Optional.of(new Player(id, player, name));
 
             // Starts the game
-            changeState(GameState.PROCESS);
+            processGame();
         } else {
             throw new RoomFullException();
         }
         System.out.println("player " + name + " entered the game");
         return id;
     }
-
 
     @Override
     public void exitGame(PlayerIdInterface id) throws RemoteException {
@@ -56,7 +55,7 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
         Player player = getPlayer(id);
         System.out.println("player " + player.getName() + " left the game. :(");
 
-        changeState(GameState.START);
+        state = GameState.START;
     }
 
     private void processGame() throws RemoteException {
@@ -73,7 +72,6 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
             } while (move != MoveResult.MOVE_ALLOWED);
         }
     }
-
 
     public MoveResult getMove(Player player) throws RemoteException {
         int pos = player.getMove(board);
@@ -93,33 +91,31 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
         if (checkVictory(pos)) {
             System.out.println("player " + player.getName() + " won this round");
             player.addScore();
-            changeState(GameState.START);
+            state = GameState.START;
         } else if (checkTie()) {
             System.out.println("Old lady!");
-            changeState(GameState.START);
-        } else {
-            changeState(GameState.START);
+            state = GameState.START;
         }
         return MoveResult.MOVE_ALLOWED;
     }
 
-    private void changeState(GameState newState) throws RemoteException {
-        state = newState;
-        if (playerOne.isPresent()) {
-            playerOne.get().changeState(
-                    state,
-                    board,
-                    playerOne.get().getScore(),
-                    playerTwo.get().getScore());
-        }
-        if (playerTwo.isPresent()) {
-            playerTwo.get().changeState(
-                    state,
-                    board,
-                    playerOne.get().getScore(),
-                    playerTwo.get().getScore());
-        }
-    }
+    // private void changeState(GameState newState) throws RemoteException {
+    // state = newState;
+    // if (playerOne.isPresent()) {
+    // playerOne.get().changeState(
+    // state,
+    // board,
+    // playerOne.get().getScore(),
+    // playerTwo.get().getScore());
+    // }
+    // if (playerTwo.isPresent()) {
+    // playerTwo.get().changeState(
+    // state,
+    // board,
+    // playerOne.get().getScore(),
+    // playerTwo.get().getScore());
+    // }
+    // }
 
     private Player getPlayer(PlayerIdInterface id) throws RemoteException {
         switch (id.getSymbol()) {

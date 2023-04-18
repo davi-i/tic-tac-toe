@@ -15,7 +15,6 @@ import tictactoe.shared.TicTacToeInterface;
 
 public class Player extends UnicastRemoteObject implements PlayerInterface {
 
-
     private TicTacToeInterface server;
     private Board board;
     private GameState state;
@@ -32,14 +31,15 @@ public class Player extends UnicastRemoteObject implements PlayerInterface {
         this.id = server.enterGame(this, name);
     }
 
-    @Override
-    public void changeState(GameState state, Board board, int player1Score, int player2Score) throws RemoteException {
-        this.board = board;
-        this.state = state;
-        this.player1Score = player1Score;
-        this.player2Score = player2Score;
-
-    }
+    // @Override
+    // public void changeState(GameState state, Board board, int player1Score, int
+    // player2Score) throws RemoteException {
+    // this.board = board;
+    // this.state = state;
+    // this.player1Score = player1Score;
+    // this.player2Score = player2Score;
+    //
+    // }
 
     public void printGame() {
         System.out.println("| SCORE | " + myName + ": " + player1Score
@@ -55,9 +55,9 @@ public class Player extends UnicastRemoteObject implements PlayerInterface {
 
     @Override
     public int getMove(Board board) throws RemoteException {
-        
+
         System.out.println("| SCORE | " + myName + ": " + player1Score
-        + " | " + opponentName + ": " + player2Score + " |");
+                + " | " + opponentName + ": " + player2Score + " |");
         System.out.println(board);
         System.out.println("[Digite sua jogada] OU ['q' para encerrar o jogo]:");
 
@@ -69,10 +69,9 @@ public class Player extends UnicastRemoteObject implements PlayerInterface {
             server.exitGame(id);
             return -1;
         }
-        
-        return Character.getNumericValue(input);  
-         
-    }
 
+        return Character.getNumericValue(input);
+
+    }
 
 }
