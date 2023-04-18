@@ -15,7 +15,7 @@ public PlayerId(PlayerSymbol symbol) throws RemoteException {
   }
 
 @Override
-public PlayerSymbol getSymbol() {
+public PlayerSymbol getSymbol() throws RemoteException {
     return symbol;
   }
 

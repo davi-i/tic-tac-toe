@@ -121,7 +121,7 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
         }
     }
 
-    private Player getPlayer(PlayerIdInterface id) {
+    private Player getPlayer(PlayerIdInterface id) throws RemoteException {
         switch (id.getSymbol()) {
             case CROSSES:
                 return playerOne.get();

@@ -7,7 +7,7 @@ import tictactoe.server.PlayerSymbol;
 import tictactoe.server.TileState;
 
 public interface PlayerIdInterface extends Remote {
-    public PlayerSymbol getSymbol();
+    public PlayerSymbol getSymbol() throws RemoteException ;
     
     public TileState getTile() throws RemoteException;
 }
