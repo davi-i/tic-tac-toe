@@ -5,6 +5,7 @@ import java.rmi.server.RemoteServer;
 import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
 
+import tictactoe.shared.Board;
 import tictactoe.shared.TestServerInterface;
 
 public class TestServer extends UnicastRemoteObject implements TestServerInterface {
@@ -12,12 +13,13 @@ public class TestServer extends UnicastRemoteObject implements TestServerInterfa
     super();
   }
 
-  public void iKnowYou() throws RemoteException {
+  public Board iKnowYou() throws RemoteException {
     try {
       String clientHost = RemoteServer.getClientHost();
       System.out.println("HE CALLED ME: " + clientHost);
     } catch (ServerNotActiveException e) {
       System.out.println("I DON'T KNOW WHO CALLED ME");
     }
+    return new Board();
   }
 }

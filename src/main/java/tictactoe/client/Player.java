@@ -1,6 +1,7 @@
 package tictactoe.client;
 
 import tictactoe.shared.GameState;
+import tictactoe.shared.PlayerIdInterface;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -20,7 +21,7 @@ public class Player extends UnicastRemoteObject implements PlayerInterface {
     private int player2Score;
     private String myName;
     private String opponentName;
-    private PlayerId id;
+    private PlayerIdInterface id;
 
     public Player(TicTacToeInterface server, String name) throws RoomFullException, RemoteException {
         super();
