@@ -8,7 +8,6 @@ import tictactoe.shared.RoomFullException;
 import tictactoe.shared.Board;
 import tictactoe.shared.GameState;
 import tictactoe.shared.MoveResult;
-import tictactoe.shared.PlayerIdInterface;
 import tictactoe.shared.PlayerInterface;
 import tictactoe.shared.TicTacToeInterface;
 
@@ -27,7 +26,7 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
     }
 
     @Override
-    public PlayerIdInterface enterGame(PlayerInterface player, String name) throws RoomFullException, RemoteException {
+    public PlayerId enterGame(PlayerInterface player, String name) throws RoomFullException, RemoteException {
         System.out.println("player " + name + " is trying to enter game");
         PlayerId id;
         if (playerOne.isEmpty()) {
@@ -47,7 +46,7 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
     }
 
     @Override
-    public void exitGame(PlayerIdInterface id) throws RemoteException {
+    public void exitGame(PlayerId id) throws RemoteException {
         board.clean();
         playerOne.get().setScore(0);
         playerTwo.get().setScore(0);
@@ -120,7 +119,7 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
     // }
     // }
 
-    private Player getPlayer(PlayerIdInterface id) throws RemoteException {
+    private Player getPlayer(PlayerId id) throws RemoteException {
         switch (id.getSymbol()) {
             case CROSSES:
                 return playerOne.get();

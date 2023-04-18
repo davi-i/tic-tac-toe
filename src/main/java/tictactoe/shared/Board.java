@@ -1,13 +1,13 @@
 package tictactoe.shared;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
 import tictactoe.server.TileState;
 
-public class Board extends UnicastRemoteObject implements BoardInterface {
+public class Board implements Serializable {
   private static final int TILE_NUMBER = 3;
 
   protected TileState[][] board = new TileState[TILE_NUMBER][TILE_NUMBER];

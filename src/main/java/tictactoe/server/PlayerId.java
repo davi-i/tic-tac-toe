@@ -1,26 +1,19 @@
 package tictactoe.server;
 
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
+import java.io.Serializable;
 
-import tictactoe.shared.GameState;
-import tictactoe.shared.PlayerIdInterface;
-
-public class PlayerId extends UnicastRemoteObject implements PlayerIdInterface {
+public class PlayerId implements Serializable {
   private PlayerSymbol symbol;
 
-public PlayerId(PlayerSymbol symbol) throws RemoteException {
-    super();
+  public PlayerId(PlayerSymbol symbol) {
     this.symbol = symbol;
   }
 
-@Override
-public PlayerSymbol getSymbol() throws RemoteException {
+  protected PlayerSymbol getSymbol() {
     return symbol;
   }
 
-@Override
-public TileState getTile() throws RemoteException {
+  protected TileState getTile() {
     switch (symbol) {
       case CROSSES:
         return TileState.CROSS;
