@@ -57,20 +57,20 @@ public class Player extends UnicastRemoteObject implements PlayerInterface {
 
         System.out.println("| SCORE | " + myName + ": " + player1Score
                 + " | " + opponentName + ": " + player2Score + " |");
-        System.out.println(board);
+        // System.out.println(board);
         System.out.println("[Digite sua jogada] OU ['q' para encerrar o jogo]:");
 
         Scanner scanner = new Scanner(System.in);
-        char input = scanner.next().charAt(0);
+        String input = scanner.next();
         scanner.close();
 
         // TODO: find a better way to do this
-        if (input == 'q') {
+        if (input.equals("q")) {
             server.exitGame(id);
             return -1;
         }
 
-        return Character.getNumericValue(input);
+        return Integer.parseInt(input);
 
     }
 

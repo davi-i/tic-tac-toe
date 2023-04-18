@@ -1,7 +1,6 @@
 package tictactoe.shared;
 
 import java.io.Serializable;
-import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
@@ -12,8 +11,8 @@ public class Board implements Serializable {
 
   protected TileState[][] board = new TileState[TILE_NUMBER][TILE_NUMBER];
 
-  public Board() throws RemoteException {
-    super();
+  public Board() {
+    clean();
   }
 
   public void setTile(int index, TileState value) {
