@@ -1,14 +1,20 @@
 package tictactoe.shared;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
 import tictactoe.server.TileState;
 
-public class Board implements BoardInterface {
+public class Board extends UnicastRemoteObject implements BoardInterface {
   private static final int TILE_NUMBER = 3;
 
   protected TileState[][] board = new TileState[TILE_NUMBER][TILE_NUMBER];
+
+  public Board() throws RemoteException {
+    super();
+  }
 
   public void setTile(int index, TileState value) {
     int i = index / TILE_NUMBER;
