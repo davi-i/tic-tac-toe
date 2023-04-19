@@ -33,8 +33,13 @@ public class Player extends UnicastRemoteObject implements PlayerInterface {
   }
 
   @Override
-  public int getMove(Board board) throws RemoteException {
-    return player.getMove(board);
+  public void updateBoard(Board board) throws RemoteException {
+    player.updateBoard(board);
+  }
+
+  @Override
+  public int getMove() throws RemoteException {
+    return player.getMove();
   }
 
   @Override

@@ -16,6 +16,7 @@ public class Player extends UnicastRemoteObject implements PlayerInterface {
 
     protected static Scanner scanner = new Scanner(System.in);
     private TicTacToeInterface server;
+    private Board board;
     private int score;
     private int opponentScore;
     private String myName;
@@ -29,15 +30,14 @@ public class Player extends UnicastRemoteObject implements PlayerInterface {
         this.id = server.enterGame(this, name);
     }
 
-    // @Override
-    // public void changeState(GameState state, Board board, int player1Score, int
-    // player2Score) throws RemoteException {
-    // this.board = board;
-    // this.state = state;
-    // this.player1Score = player1Score;
-    // this.player2Score = player2Score;
-    //
-    // }
+    private void printMap() {
+        String scoreStr = "| SCORE | " + myName + ": " + score + " VS " + opponentName + ": " + opponentScore + " |";
+        System.out.println("-".repeat(scoreStr.length()));
+        System.out.println(scoreStr);
+        System.out.println("-".repeat(scoreStr.length()));
+        System.out.println("\n");
+        System.out.println(board);
+    }
 
     @Override
     public void setOpponentName(String name) throws RemoteException {
@@ -45,11 +45,13 @@ public class Player extends UnicastRemoteObject implements PlayerInterface {
     }
 
     @Override
-    public int getMove(Board board) throws RemoteException {
+    public void updateBoard(Board board) throws RemoteException {
+        this.board = board;
+        printMap();
+    }
 
-        System.out.println("| SCORE | " + myName + ": " + score
-                + " | " + opponentName + ": " + opponentScore + " |");
-        System.out.println(board);
+    @Override
+    public int getMove() throws RemoteException {
         System.out.println("[Digite sua jogada] OU ['q' para encerrar o jogo]:");
 
         String input;

@@ -13,7 +13,7 @@ public enum Message {
       case TIE:
         return "The old lady won";
       case WAITING:
-        return "Waiting for other player.";
+        return "Waiting for other player...";
       case YOU_LOST:
         return "You lost the game. :(";
       case INVALID_MOVE:

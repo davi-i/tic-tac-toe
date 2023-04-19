@@ -4,10 +4,9 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface PlayerInterface extends Remote {
+  public void updateBoard(Board board) throws RemoteException;
 
-  public int getMove(Board board) throws RemoteException;
-  // public void changeState(GameState state, Board board, int player1Score, int
-  // player2Score) throws RemoteException;
+  public int getMove() throws RemoteException;
 
   public void setOpponentName(String name) throws RemoteException;
 

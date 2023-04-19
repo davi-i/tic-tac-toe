@@ -99,9 +99,9 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
     }
 
     public MoveResult getMove(Player player, Player opponent) throws RemoteException {
-        System.out.println("going to get move");
-        int pos = player.getMove(board);
-        System.out.println("got move");
+        player.updateBoard(board);
+        opponent.updateBoard(board);
+        int pos = player.getMove();
         TileState tile;
         try {
             tile = board.getTile(pos);
@@ -133,6 +133,7 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
 
             return MoveResult.TIE;
         }
+        player.sendMessage(Message.WAITING);
         return MoveResult.MOVE_ALLOWED;
     }
 
