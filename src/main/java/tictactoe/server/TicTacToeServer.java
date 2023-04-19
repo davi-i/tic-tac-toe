@@ -204,7 +204,6 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
                         || (board.getTile(2) == tile && board.getTile(5) == tile)
                         || (board.getTile(0) == tile && board.getTile(4) == tile));
             default:
-                // TODO: Error
                 return false;
         }
     }

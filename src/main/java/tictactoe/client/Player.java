@@ -54,19 +54,22 @@ public class Player extends UnicastRemoteObject implements PlayerInterface {
     public int getMove() throws RemoteException {
         System.out.println("[Digite sua jogada] OU ['q' para encerrar o jogo]:");
 
-        String input;
-        input = scanner.nextLine();
+        while (true) {
+            String input;
+            input = scanner.nextLine();
 
-        // TODO: find a better way to do this
-        if (input.equals("q")) {
-            server.exitGame(id);
-            scanner.close();
-            System.exit(0);
+            // TODO: find a better way to do this
+            if (input.equals("q")) {
+                server.exitGame(id);
+                scanner.close();
+                System.exit(0);
+            }
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Por favor, digite um número ou 'q'");
+            }
         }
-
-        // TODO: HANDLE EXECPTIOskfhdN
-        return Integer.parseInt(input);
-
     }
 
     @Override
