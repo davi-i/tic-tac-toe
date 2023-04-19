@@ -9,6 +9,7 @@ import tictactoe.shared.Board;
 import tictactoe.shared.GameState;
 import tictactoe.shared.Message;
 import tictactoe.shared.MoveResult;
+import tictactoe.shared.NameAlreadyUsedException;
 import tictactoe.shared.PlayerInterface;
 import tictactoe.shared.TicTacToeInterface;
 
@@ -27,8 +28,8 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
     }
 
     @Override
-    public PlayerId enterGame(PlayerInterface player, String name) throws RoomFullException, RemoteException {
-        System.out.println("player " + name + " entered the game");
+    public PlayerId enterGame(PlayerInterface player, String name)
+            throws RoomFullException, RemoteException, NameAlreadyUsedException {
         PlayerId id;
         if (playerOne.isEmpty()) {
             id = new PlayerId(PlayerSymbol.CROSSES);
@@ -36,11 +37,15 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
 
             player.sendMessage(Message.WAITING);
         } else if (playerTwo.isEmpty()) {
+            if (playerOne.get().getName().equals(name)) {
+                throw new NameAlreadyUsedException();
+            }
             id = new PlayerId(PlayerSymbol.NOUGHTS);
             playerTwo = Optional.of(new Player(this, id, player, name));
         } else {
             throw new RoomFullException();
         }
+        System.out.println("player " + name + " entered the game");
         return id;
     }
 
@@ -70,6 +75,7 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
 
     protected void startGame() {
         while (true) {
+            // For some reason, it only works when this line is here
             System.out.print("");
             if (state == GameState.WAITING && playerOne.isPresent() && playerTwo.isPresent()) {
                 try {

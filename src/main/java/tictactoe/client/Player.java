@@ -1,6 +1,7 @@
 package tictactoe.client;
 
 import tictactoe.shared.Message;
+import tictactoe.shared.NameAlreadyUsedException;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -23,7 +24,8 @@ public class Player extends UnicastRemoteObject implements PlayerInterface {
     private String opponentName;
     private PlayerId id;
 
-    public Player(TicTacToeInterface server, String name) throws RoomFullException, RemoteException {
+    public Player(TicTacToeInterface server, String name)
+            throws RoomFullException, RemoteException, NameAlreadyUsedException {
         super();
         this.server = server;
         this.myName = name;
