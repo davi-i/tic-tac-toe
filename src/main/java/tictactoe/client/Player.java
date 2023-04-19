@@ -27,7 +27,11 @@ public class Player extends UnicastRemoteObject implements PlayerInterface {
         super();
         this.server = server;
         this.myName = name;
-        this.id = server.enterGame(this, name);
+        try {
+            this.id = server.enterGame(this, name);
+        } catch (RemoteException e) {
+            System.out.println("Connection broken");
+        }
     }
 
     private void printMap() {
@@ -52,7 +56,7 @@ public class Player extends UnicastRemoteObject implements PlayerInterface {
 
     @Override
     public int getMove() throws RemoteException {
-        System.out.println("[Digite sua jogada] OU ['q' para encerrar o jogo]:");
+        System.out.println("[Type your move (0-8)]:");
 
         while (true) {
             String input;
@@ -67,7 +71,7 @@ public class Player extends UnicastRemoteObject implements PlayerInterface {
             try {
                 return Integer.parseInt(input);
             } catch (NumberFormatException e) {
-                System.out.println("Por favor, digite um número ou 'q'");
+                System.out.println("Please type your a valid number");
             }
         }
     }

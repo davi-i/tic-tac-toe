@@ -13,7 +13,7 @@ public class TicTacToe {
         try {
             TicTacToeInterface server = (TicTacToeInterface) Naming
                     .lookup("rmi://" + args[1] + ":" + args[2] + "/TicTacToe");
-            System.out.print("Digite seu nome: ");
+            System.out.print("Enter yout name: ");
             String name = Player.scanner.nextLine();
             new Player(server, name);
 

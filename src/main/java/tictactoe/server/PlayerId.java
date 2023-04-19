@@ -13,6 +13,10 @@ public class PlayerId implements Serializable {
     return symbol;
   }
 
+  protected void setSymbol(PlayerSymbol symbol) {
+    this.symbol = symbol;
+  }
+
   protected TileState getTile() {
     switch (symbol) {
       case CROSSES:
