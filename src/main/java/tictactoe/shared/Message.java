@@ -7,7 +7,7 @@ public enum Message {
   public String toString() {
     switch (this) {
       case OPPONENT_LEFT:
-        return "the opponent has left the game. You won by wo";
+        return "The opponent has left the game. Waiting for someone else to connect...";
       case YOU_WON:
         return "You won the game. :)";
       case TIE:

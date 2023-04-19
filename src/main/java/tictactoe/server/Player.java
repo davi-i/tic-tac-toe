@@ -11,9 +11,11 @@ public class Player extends UnicastRemoteObject implements PlayerInterface {
   private PlayerId id;
   private PlayerInterface player;
   private String name;
+  private TicTacToeServer server;
 
-  public Player(PlayerId id, PlayerInterface player, String name) throws RemoteException {
+  public Player(TicTacToeServer server, PlayerId id, PlayerInterface player, String name) throws RemoteException {
     super();
+    this.server = server;
     this.id = id;
     this.player = player;
     this.name = name;
@@ -34,36 +36,71 @@ public class Player extends UnicastRemoteObject implements PlayerInterface {
 
   @Override
   public void updateBoard(Board board) throws RemoteException {
-    player.updateBoard(board);
+    try {
+      player.updateBoard(board);
+    } catch (RemoteException e) {
+      server.exitGame(id);
+      throw e;
+    }
   }
 
   @Override
   public int getMove() throws RemoteException {
-    return player.getMove();
+    try {
+      return player.getMove();
+    } catch (RemoteException e) {
+      server.exitGame(id);
+      throw e;
+    }
   }
 
   @Override
   public void sendMessage(Message message) throws RemoteException {
-    player.sendMessage(message);
+    try {
+      player.sendMessage(message);
+    } catch (RemoteException e) {
+      server.exitGame(id);
+      throw e;
+    }
   }
 
   @Override
   public void incrementOpponentScore() throws RemoteException {
-    player.incrementOpponentScore();
+    try {
+      player.incrementOpponentScore();
+    } catch (RemoteException e) {
+      server.exitGame(id);
+      throw e;
+    }
   }
 
   @Override
   public void resetOpponentScore() throws RemoteException {
-    player.resetOpponentScore();
+    try {
+      player.resetOpponentScore();
+    } catch (RemoteException e) {
+      server.exitGame(id);
+      throw e;
+    }
   }
 
   @Override
   public void incrementScore() throws RemoteException {
-    player.incrementScore();
+    try {
+      player.incrementScore();
+    } catch (RemoteException e) {
+      server.exitGame(id);
+      throw e;
+    }
   }
 
   @Override
   public void resetScore() throws RemoteException {
-    player.resetScore();
+    try {
+      player.resetScore();
+    } catch (RemoteException e) {
+      server.exitGame(id);
+      throw e;
+    }
   }
 }

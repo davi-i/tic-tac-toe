@@ -32,15 +32,12 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
         PlayerId id;
         if (playerOne.isEmpty()) {
             id = new PlayerId(PlayerSymbol.CROSSES);
-            playerOne = Optional.of(new Player(id, player, name));
+            playerOne = Optional.of(new Player(this, id, player, name));
 
             player.sendMessage(Message.WAITING);
         } else if (playerTwo.isEmpty()) {
             id = new PlayerId(PlayerSymbol.NOUGHTS);
-            playerTwo = Optional.of(new Player(id, player, name));
-
-            // Starts the game
-            processGame();
+            playerTwo = Optional.of(new Player(this, id, player, name));
         } else {
             throw new RoomFullException();
         }
@@ -49,23 +46,39 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
 
     @Override
     public void exitGame(PlayerId id) throws RemoteException {
-        playerOne.get().resetScore();
-        playerTwo.get().resetScore();
-
+        String playerName = "";
         switch (id.getSymbol()) {
             case CROSSES:
+                playerName = playerOne.get().getName();
                 playerOne = playerTwo;
-                playerOne.get().getId().setSymbol(PlayerSymbol.CROSSES);
-                playerTwo = Optional.empty();
+                break;
             case NOUGHTS:
-                playerTwo = Optional.empty();
+                playerName = playerTwo.get().getName();
+                break;
         }
-
-        Player player = getPlayer(id);
-        System.out.println("player " + player.getName() + " left the game. :(");
+        System.out.println("player " + playerName + " left the game. :(");
+        playerTwo = Optional.empty();
+        if (playerOne.isPresent()) {
+            playerOne.get().getId().setSymbol(PlayerSymbol.CROSSES);
+            playerOne.get().resetScore();
+            playerOne.get().sendMessage(Message.OPPONENT_LEFT);
+        }
 
         board.clean();
         state = GameState.WAITING;
+    }
+
+    protected void startGame() {
+        while (true) {
+            System.out.print("");
+            if (state == GameState.WAITING && playerOne.isPresent() && playerTwo.isPresent()) {
+                try {
+                    processGame();
+                } catch (RemoteException e) {
+                    System.err.println(e);
+                }
+            }
+        }
     }
 
     private void processGame() throws RemoteException {
@@ -135,36 +148,6 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
         }
         player.sendMessage(Message.WAITING);
         return MoveResult.MOVE_ALLOWED;
-    }
-
-    // private void changeState(GameState newState) throws RemoteException {
-    // state = newState;
-    // if (playerOne.isPresent()) {
-    // playerOne.get().changeState(
-    // state,
-    // board,
-    // playerOne.get().getScore(),
-    // playerTwo.get().getScore());
-    // }
-    // if (playerTwo.isPresent()) {
-    // playerTwo.get().changeState(
-    // state,
-    // board,
-    // playerOne.get().getScore(),
-    // playerTwo.get().getScore());
-    // }
-    // }
-
-    private Player getPlayer(PlayerId id) throws RemoteException {
-        switch (id.getSymbol()) {
-            case CROSSES:
-                return playerOne.get();
-            case NOUGHTS:
-                return playerTwo.get();
-            default:
-                throw new RuntimeException();
-
-        }
     }
 
     private boolean checkVictory(int pos) {

@@ -15,6 +15,8 @@ public class TicTacToe {
             Naming.rebind("rmi://0.0.0.0/TicTacToe", server);
 
             System.out.println("Waiting for players...");
+
+            server.startGame();
         } catch (Exception e) {
             e.printStackTrace();
         }
