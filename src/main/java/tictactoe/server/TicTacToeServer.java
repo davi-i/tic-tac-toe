@@ -7,6 +7,7 @@ import java.util.Optional;
 import tictactoe.shared.RoomFullException;
 import tictactoe.shared.Board;
 import tictactoe.shared.GameState;
+import tictactoe.shared.Message;
 import tictactoe.shared.MoveResult;
 import tictactoe.shared.PlayerInterface;
 import tictactoe.shared.TicTacToeInterface;
@@ -19,7 +20,7 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
 
     public TicTacToeServer() throws RemoteException {
         super();
-        state = GameState.START;
+        state = GameState.WAITING;
         board = new Board();
         playerOne = Optional.empty();
         playerTwo = Optional.empty();
@@ -32,6 +33,8 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
         if (playerOne.isEmpty()) {
             id = new PlayerId(PlayerSymbol.CROSSES);
             playerOne = Optional.of(new Player(id, player, name));
+
+            player.sendMessage(Message.WAITING);
         } else if (playerTwo.isEmpty()) {
             id = new PlayerId(PlayerSymbol.NOUGHTS);
             playerTwo = Optional.of(new Player(id, player, name));
@@ -47,33 +50,55 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
 
     @Override
     public void exitGame(PlayerId id) throws RemoteException {
-        board.clean();
-        playerOne.get().setScore(0);
-        playerTwo.get().setScore(0);
+        playerOne.get().resetScore();
+        playerTwo.get().resetScore();
+
+        switch (id.getSymbol()) {
+            case CROSSES:
+                playerOne = playerTwo;
+                playerTwo = Optional.empty();
+            case NOUGHTS:
+                playerTwo = Optional.empty();
+        }
 
         Player player = getPlayer(id);
         System.out.println("player " + player.getName() + " left the game. :(");
 
-        state = GameState.START;
+        board.clean();
+        state = GameState.WAITING;
     }
 
     private void processGame() throws RemoteException {
-        state = GameState.PROCESS;
-        while (state == GameState.PROCESS) {
-            MoveResult move;
-            do {
-                move = getMove(playerOne.get());
-                // TODO: notify the player of wrong move
-            } while (move != MoveResult.MOVE_ALLOWED);
+        playerOne.get().setOpponentName(playerTwo.get().getName());
+        playerTwo.get().setOpponentName(playerOne.get().getName());
 
-            do {
-                move = getMove(playerTwo.get());
-                // TODO: notify the player of wrong move
-            } while (move != MoveResult.MOVE_ALLOWED);
+        state = GameState.PROCESSING;
+        Player playerOne = this.playerOne.get();
+        Player playerTwo = this.playerTwo.get();
+        outer: while (state == GameState.PROCESSING) {
+            while (true) {
+                MoveResult move = getMove(playerOne, playerTwo);
+                if (move == MoveResult.MOVE_ALLOWED) {
+                    break;
+                } else if (move == MoveResult.TIE || move == MoveResult.VICTORY) {
+                    board.clean();
+                    continue outer;
+                }
+            }
+
+            while (true) {
+                MoveResult move = getMove(playerTwo, playerOne);
+                if (move == MoveResult.MOVE_ALLOWED) {
+                    break;
+                } else if (move == MoveResult.TIE || move == MoveResult.VICTORY) {
+                    board.clean();
+                    continue outer;
+                }
+            }
         }
     }
 
-    public MoveResult getMove(Player player) throws RemoteException {
+    public MoveResult getMove(Player player, Player opponent) throws RemoteException {
         System.out.println("going to get move");
         int pos = player.getMove(board);
         System.out.println("got move");
@@ -81,22 +106,32 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
         try {
             tile = board.getTile(pos);
         } catch (IndexOutOfBoundsException e) {
+            player.sendMessage(Message.INVALID_MOVE);
             return MoveResult.INVALID_MOVE;
         }
         if (tile != TileState.EMPTY) {
+            player.sendMessage(Message.TILE_NOT_EMPTY);
             return MoveResult.TILE_NOT_EMPTY;
         }
 
         System.out.println("player " + player.getName() + " made move at position " + pos);
         board.setTile(pos, player.getId().getTile());
-        // TODO: NOTIFY PLAYERS WHO WON
         if (checkVictory(pos)) {
             System.out.println("player " + player.getName() + " won this round");
-            player.addScore();
-            state = GameState.START;
+            player.incrementScore();
+            opponent.incrementOpponentScore();
+
+            player.sendMessage(Message.YOU_WON);
+            opponent.sendMessage(Message.YOU_LOST);
+
+            return MoveResult.VICTORY;
         } else if (checkTie()) {
             System.out.println("Old lady!");
-            state = GameState.START;
+
+            player.sendMessage(Message.TIE);
+            opponent.sendMessage(Message.TIE);
+
+            return MoveResult.TIE;
         }
         return MoveResult.MOVE_ALLOWED;
     }
@@ -147,7 +182,7 @@ public class TicTacToeServer extends UnicastRemoteObject implements TicTacToeInt
                         || (board.getTile(5) == tile && board.getTile(8) == tile));
             case 3:
                 return ((board.getTile(4) == tile && board.getTile(5) == tile)
-                        || (board.getTile(0) == tile && board.getTile(7) == tile));
+                        || (board.getTile(0) == tile && board.getTile(6) == tile));
             case 4:
                 return ((board.getTile(3) == tile && board.getTile(5) == tile)
                         || (board.getTile(1) == tile && board.getTile(7) == tile)

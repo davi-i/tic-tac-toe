@@ -1,10 +1,7 @@
 package tictactoe.client;
 
-import tictactoe.shared.GameState;
+import tictactoe.shared.Message;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Scanner;
@@ -17,12 +14,10 @@ import tictactoe.shared.TicTacToeInterface;
 
 public class Player extends UnicastRemoteObject implements PlayerInterface {
 
-    private static Scanner scanner = new Scanner(System.in);
+    protected static Scanner scanner = new Scanner(System.in);
     private TicTacToeInterface server;
-    private Board board;
-    private GameState state;
-    private int player1Score;
-    private int player2Score;
+    private int score;
+    private int opponentScore;
     private String myName;
     private String opponentName;
     private PlayerId id;
@@ -44,23 +39,16 @@ public class Player extends UnicastRemoteObject implements PlayerInterface {
     //
     // }
 
-    public void printGame() {
-        System.out.println("| SCORE | " + myName + ": " + player1Score
-                + " | " + opponentName + ": " + player2Score + " |");
-        System.out.println(board);
-        System.out.println("[Digite sua jogada] OU ['q' para encerrar o jogo]");
-    }
-
     @Override
-    public void setOpponetName(String name) throws RemoteException {
+    public void setOpponentName(String name) throws RemoteException {
         this.opponentName = name;
     }
 
     @Override
     public int getMove(Board board) throws RemoteException {
 
-        System.out.println("| SCORE | " + myName + ": " + player1Score
-                + " | " + opponentName + ": " + player2Score + " |");
+        System.out.println("| SCORE | " + myName + ": " + score
+                + " | " + opponentName + ": " + opponentScore + " |");
         System.out.println(board);
         System.out.println("[Digite sua jogada] OU ['q' para encerrar o jogo]:");
 
@@ -74,8 +62,34 @@ public class Player extends UnicastRemoteObject implements PlayerInterface {
             System.exit(0);
         }
 
+        // TODO: HANDLE EXECPTIOskfhdN
         return Integer.parseInt(input);
 
+    }
+
+    @Override
+    public void sendMessage(Message message) throws RemoteException {
+        System.out.println(message);
+    }
+
+    @Override
+    public void incrementOpponentScore() throws RemoteException {
+        opponentScore++;
+    }
+
+    @Override
+    public void resetOpponentScore() throws RemoteException {
+        opponentScore = 0;
+    }
+
+    @Override
+    public void incrementScore() throws RemoteException {
+        score++;
+    }
+
+    @Override
+    public void resetScore() throws RemoteException {
+        score = 0;
     }
 
 }

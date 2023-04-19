@@ -1,10 +1,7 @@
 package tictactoe.client;
 
 import java.rmi.Naming;
-import java.util.Scanner;
 
-import tictactoe.shared.Board;
-import tictactoe.shared.TestServerInterface;
 import tictactoe.shared.TicTacToeInterface;
 
 /**
@@ -14,11 +11,11 @@ import tictactoe.shared.TicTacToeInterface;
 public class TicTacToe {
     public static void main(String[] args) {
         try {
-            System.setProperty("java.rmi.server.hostname", "10.9.99.230");
             TicTacToeInterface server = (TicTacToeInterface) Naming
                     .lookup("rmi://" + args[1] + ":" + args[2] + "/TicTacToe");
-            // TODO: enter name with scanner
-            Player player = new Player(server, args[3]);
+            System.out.print("Digite seu nome: ");
+            String name = Player.scanner.nextLine();
+            new Player(server, name);
 
         } catch (Exception e) {
             e.printStackTrace();
